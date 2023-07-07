@@ -1,12 +1,19 @@
 import openai
 from termcolor import colored
 import streamlit as st
+import configparser
 
 from database import get_redis_connection, get_redis_results
 
 from config import CHAT_MODEL, COMPLETIONS_MODEL, INDEX_NAME
 
-redis_client = get_redis_connection()
+config = configparser.ConfigParser()
+config.read('../config.ini')
+
+redis_client = get_redis_connection(host=(config['REDIS']['HOST']), password=(config['REDIS']
+                ['PASSWORD']), port=(config['REDIS']['REDISPORT']))
+
+openai.api_key = config['OPENAI']['API_KEY']
 
 # A basic class to create a message as a dict for chat
 class Message:

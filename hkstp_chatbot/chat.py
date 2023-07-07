@@ -4,10 +4,16 @@ from streamlit_chat import message
 from database import get_redis_connection
 from chatbot import RetrievalAssistant, Message
 
+import configparser
+
 # Initialise database
 
 ## Initialise Redis connection
-redis_client = get_redis_connection()
+config = configparser.ConfigParser()
+config.read('../config.ini')
+
+redis_client = get_redis_connection(host=(config['REDIS']['HOST']), password=(config['REDIS']
+                ['PASSWORD']), port=(config['REDIS']['REDISPORT']))
 
 # Set instruction
 
