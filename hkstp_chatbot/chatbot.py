@@ -10,8 +10,7 @@ from config import CHAT_MODEL, COMPLETIONS_MODEL, INDEX_NAME
 config = configparser.ConfigParser()
 config.read('../config.ini')
 
-redis_client = get_redis_connection(host=(config['REDIS']['HOST']), password=(config['REDIS']
-                ['PASSWORD']), port=(config['REDIS']['REDISPORT']))
+redis_client = get_redis_connection()
 
 openai.api_key = config['OPENAI']['API_KEY']
 

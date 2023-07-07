@@ -11,7 +11,7 @@ from config import EMBEDDINGS_MODEL, PREFIX, VECTOR_FIELD_NAME
 # Get a Redis connection
 def get_redis_connection(host='localhost',password = 'default', port='6379',db=0):
     
-    r = Redis(host=host,password = password, port=port, db=db,decode_responses=False)
+    r = Redis(host=host, port=port, db=db,decode_responses=False)
     return r
 
 # Create a Redis index to hold our data

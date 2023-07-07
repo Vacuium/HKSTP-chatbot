@@ -12,8 +12,7 @@ import configparser
 config = configparser.ConfigParser()
 config.read('../config.ini')
 
-redis_client = get_redis_connection(host=(config['REDIS']['HOST']), password=(config['REDIS']
-                ['PASSWORD']), port=(config['REDIS']['REDISPORT']))
+redis_client = get_redis_connection()
 
 # Set instruction
 

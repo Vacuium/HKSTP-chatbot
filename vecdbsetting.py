@@ -29,8 +29,7 @@ pd.set_option('display.max_colwidth', 0)
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-redis_client = get_redis_connection(host=(config['REDIS']['HOST']), password=(config['REDIS']
-                ['PASSWORD']), port=(config['REDIS']['REDISPORT']))
+redis_client = get_redis_connection()
 
 data_dir = os.path.join(os.curdir,'data')
 pdf_files = sorted([x for x in os.listdir(data_dir) if 'DS_Store' not in x])
