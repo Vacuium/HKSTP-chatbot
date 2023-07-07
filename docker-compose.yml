@@ -3,6 +3,8 @@ services:
   chatbot:
     build: .
     image: hkstpchatbot
+    environment:
+      OPENAI_API_KEY = ${API_KEY}
     ports:
       - "22303:5000"
     depends_on:
