@@ -4,7 +4,7 @@ FROM python:3.11
 WORKDIR ./app
 
 COPY hkstp_chatbot hkstp_chatbot
-COPY vecdbstting.py vecdbsetting,py
+COPY vecdbsetting.py vecdbsetting,py
 COPY data data
 COPY requirements.txt requirements.txt
 COPY config.ini config.ini
