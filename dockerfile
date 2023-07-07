@@ -7,6 +7,6 @@ COPY . .
 RUN pip install pip update
 RUN pip3 install -r requirements.txt
 
-EXPOSE 5000
+EXPOSE 22303
 
 CMD ["streamlit run", "./vecdbsetting.py"]
