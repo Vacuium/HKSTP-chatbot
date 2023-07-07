@@ -9,4 +9,4 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 22303
 
-CMD ["streamlit run", "./vecdbsetting.py"]
+CMD ["python3", "./vecdbsetting.py"]
