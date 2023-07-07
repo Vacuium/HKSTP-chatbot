@@ -3,6 +3,7 @@ from numpy import array, average
 import openai
 import pandas as pd
 import numpy as np
+import time
 
 from .config import TEXT_EMBEDDING_CHUNK_SIZE, EMBEDDINGS_MODEL
 from .database import load_vectors
@@ -100,6 +101,7 @@ def handle_file_string(file, tokenizer, redis_conn, text_embedding_field, index_
         vectors.append({'id': id, "vector": embedding, 'metadata': {"filename": filename,
                                                                     "text_chunk": text_chunk,
                                                                     "file_chunk_index": i}})
+        time.sleep(5)
 
     try:
         # Load vectors into Redis
