@@ -2,6 +2,9 @@ import openai
 from termcolor import colored
 import streamlit as st
 import configparser
+import logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        level=logging.INFO)
 
 from database import get_redis_connection, get_redis_results
 
@@ -69,6 +72,7 @@ class RetrievalAssistant:
         
         # Answer normally unless the trigger sequence is used "searching_for_answers"
         if 'searching for answers' in assistant_response['content'].lower():
+            logging.info('Searching from database...')
             question_extract = openai.Completion.create(
                 model = COMPLETIONS_MODEL, 
                 prompt=f'''
@@ -77,6 +81,7 @@ class RetrievalAssistant:
             '''
             )
             search_result = self._get_search_results(question_extract['choices'][0]['text'])
+            logging.info(f'Search result:{search_result}')
             
             # We insert an extra system prompt here to give fresh context to the Chatbot on how to use the Redis results
             # In this instance we add it to the conversation history, but in production it may be better to hide
