@@ -8,6 +8,9 @@ import tiktoken
 import textract
 from numpy import array, average
 import configparser
+import logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        level=logging.INFO)
 
 from hkstp_chatbot.database import get_redis_connection
 from hkstp_chatbot.transformers import handle_file_string
@@ -39,7 +42,7 @@ tokenizer = tiktoken.get_encoding("cl100k_base")
 for pdf_file in pdf_files:
     
     pdf_path = os.path.join(data_dir,pdf_file)
-    print(pdf_path)
+    logging.info(pdf_path)
     
     # Extract the raw text from each PDF using textract
     text = textract.process(pdf_path, method='pdfminer')
