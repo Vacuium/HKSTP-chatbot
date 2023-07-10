@@ -12,7 +12,7 @@ config.read('../config.ini')
 
 redis_client = get_redis_connection()
 
-openai.api_key = config['OPENAI']['API_KEY']
+# openai.api_key = config['OPENAI']['API_KEY']
 
 # A basic class to create a message as a dict for chat
 class Message:
