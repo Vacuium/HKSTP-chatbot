@@ -44,6 +44,7 @@ class RetrievalAssistant:
               messages=prompt,
               temperature=0.1
             )
+            logging.info(f"Sent prompt: {prompt}")
             
             response_message = Message(
                 completion['choices'][0]['message']['role'],
