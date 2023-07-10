@@ -76,7 +76,7 @@ if st.button('Submit', key='generationSubmit'):
     response = query(messages)
 
     # Debugging step to print the whole response
-    st.write(response)
+    #st.write(response)
 
     st.session_state.past.append(prompt)
     st.session_state.generated.append(response['content'])
