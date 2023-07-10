@@ -100,6 +100,7 @@ class RetrievalAssistant:
                 )
             
             self.conversation_history.append(assistant_response)
+            logging.info(f"Summary: {assistant_response}")
             return assistant_response
         else:
             self.conversation_history.append(assistant_response)
