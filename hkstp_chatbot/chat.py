@@ -43,8 +43,8 @@ st.set_page_config(
     page_icon=":robot:"
 )
 
-st.title('Formula 1 Chatbot')
-st.subheader("Help us help you learn about Formula 1")
+st.title('HKSTP Chatbot')
+st.subheader("Help us help you learn about HKSTP")
 
 if 'generated' not in st.session_state:
     st.session_state['generated'] = []
