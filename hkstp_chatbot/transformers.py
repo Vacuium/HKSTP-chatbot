@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 import time
 
-from .config import TEXT_EMBEDDING_CHUNK_SIZE, EMBEDDINGS_MODEL
-from .database import load_vectors
+from config import TEXT_EMBEDDING_CHUNK_SIZE, EMBEDDINGS_MODEL
+from database import load_vectors
 
 def get_col_average_from_list_of_lists(list_of_lists):
     """Return the average of each column in a list of lists."""
