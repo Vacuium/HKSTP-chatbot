@@ -132,4 +132,4 @@ dmypy.json
 .github/templates/*
 
 # data file
-data/
+data/*
