@@ -11,4 +11,4 @@ RUN cd ./hkstp_chatbot
 
 EXPOSE 8501
 
-CMD ["streamlit", "run", "./chat.py"]
+CMD ["streamlit", "run", "./hkstp_chatbot/chat.py"]
