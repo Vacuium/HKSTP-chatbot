@@ -63,7 +63,7 @@ class RetrievalAssistant:
         search_content = get_redis_results(
             redis_client,latest_question, 
             INDEX_NAME
-        )['result'][0]
+        )['result'][0:10]
 
         return search_content
         

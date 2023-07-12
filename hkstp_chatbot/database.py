@@ -42,7 +42,7 @@ def load_vectors(client:Redis, input_list, vector_field_name):
     p.execute()
 
 # Make query to Redis
-def query_redis(redis_conn,query,index_name, top_k=2):
+def query_redis(redis_conn,query,index_name, top_k=15):
     
     
 
