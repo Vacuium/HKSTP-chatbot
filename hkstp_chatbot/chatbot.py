@@ -64,6 +64,10 @@ class RetrievalAssistant:
             redis_client,latest_question, 
             INDEX_NAME
         )['result'][0:10]
+        response = ''
+        for r in search_content:
+            # response += r
+            logging.info(r)
 
         return search_content
         
@@ -77,8 +81,8 @@ class RetrievalAssistant:
             question_extract = openai.Completion.create(
                 model = COMPLETIONS_MODEL, 
                 prompt=f'''
-                Extract the user's latest question and the year for that question from this 
-                conversation: {self.conversation_history}. Extract it as a sentence stating the Question and Year"
+                Extract the user's latest question for that question from this 
+                conversation: {self.conversation_history}. Extract it as a sentence stating the Question"
             '''
             )
             search_result = self._get_search_results(question_extract['choices'][0]['text'])
