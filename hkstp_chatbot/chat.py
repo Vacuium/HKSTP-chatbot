@@ -1,8 +1,8 @@
 import streamlit as st
 from streamlit_chat import message
 
-from database import get_redis_connection
-from chatbot import RetrievalAssistant, Message
+from hkstp_chatbot.database import get_redis_connection
+from hkstp_chatbot.chatbot import RetrievalAssistant, Message
 
 import configparser
 

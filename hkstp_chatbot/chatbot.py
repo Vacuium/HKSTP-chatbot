@@ -6,9 +6,9 @@ import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
 
-from database import get_redis_connection, get_redis_results
+from hkstp_chatbot.database import get_redis_connection, get_redis_results
 
-from config import CHAT_MODEL, COMPLETIONS_MODEL, INDEX_NAME
+from hkstp_chatbot.config import CHAT_MODEL, COMPLETIONS_MODEL, INDEX_NAME
 
 config = configparser.ConfigParser()
 config.read('../config.ini')

@@ -3,5 +3,13 @@ EMBEDDINGS_MODEL = "text-embedding-ada-002"
 CHAT_MODEL = 'gpt-3.5-turbo'
 TEXT_EMBEDDING_CHUNK_SIZE=300
 VECTOR_FIELD_NAME='content_vector'
-PREFIX = "sportsdoc"  
-INDEX_NAME = "f1-index"
+PREFIX = "hkstpdocs"  
+INDEX_NAME = "hkstp-index"
+VECTOR_DIM = 1536
+DISTANCE_METRIC = "COSINE"
+
+EXTRACT_METHOD = {
+    "pdf"  : "pdfminer",
+    "docx" : "docx2txt",
+    "dox"  : "antiword"
+}

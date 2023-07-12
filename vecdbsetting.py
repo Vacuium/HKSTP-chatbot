@@ -27,12 +27,7 @@ from hkstp_chatbot.database import get_redis_connection
 from hkstp_chatbot.transformers import handle_file_string
 
 # Set our default models and chunking size
-from hkstp_chatbot.config import COMPLETIONS_MODEL, EMBEDDINGS_MODEL, CHAT_MODEL, TEXT_EMBEDDING_CHUNK_SIZE, VECTOR_FIELD_NAME
-INDEX_NAME = "f1-index"
-VECTOR_DIM = 1536 #len(data['title_vector'][0]) # length of the vectors
-#VECTOR_NUMBER = len(data)                 # initial number of vectors
-PREFIX = "sportsdoc"                            # prefix for the document keys
-DISTANCE_METRIC = "COSINE"                # distance metric for the vectors (ex. COSINE, IP, L2)
+from hkstp_chatbot.config import  VECTOR_FIELD_NAME, INDEX_NAME, VECTOR_DIM, DISTANCE_METRIC, EXTRACT_METHOD, PREFIX
 
 # Ignore unclosed SSL socket warnings - optional in case you get these errors
 import warnings
@@ -82,20 +77,29 @@ except Exception as e:
     )
 
 data_dir = os.path.join(os.curdir,'data')
-pdf_files = sorted([x for x in os.listdir(data_dir) if 'DS_Store' not in x])
+files_name = sorted([x for x in os.listdir(data_dir) if 'DS_Store' not in x])
 tokenizer = tiktoken.get_encoding("cl100k_base")
 
+def extension_extract(file_name: str):
+    l = file_name.split('.')
+    if l != file_name:
+        return l[-1]
+    else:
+        return 'txt'
+
 # Process each PDF file and prepare for embedding
-for pdf_file in pdf_files:
+for file_name in files_name:
+
+    extension = extension_extract(file_name)
     
-    pdf_path = os.path.join(data_dir,pdf_file)
-    logging.info(pdf_path)
+    file_path = os.path.join(data_dir,file_name)
+    logging.info(file_path)
     
     # Extract the raw text from each PDF using textract
-    text = textract.process(pdf_path, method='pdfminer')
+    text = textract.process(file_path, method = EXTRACT_METHOD.get(extension, None))
     
     # Chunk each document, embed the contents and load to Redis
-    handle_file_string((pdf_file,text.decode("utf-8")),tokenizer,redis_client,VECTOR_FIELD_NAME,INDEX_NAME)
+    handle_file_string((file_name,text.decode("utf-8")),tokenizer,redis_client,VECTOR_FIELD_NAME,INDEX_NAME)
 
 # Check that our docs have been inserted
 logging.info(redis_client.ft(INDEX_NAME).info()['num_docs'])

@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 import time
 
-from config import TEXT_EMBEDDING_CHUNK_SIZE, EMBEDDINGS_MODEL
-from database import load_vectors
+from hkstp_chatbot.config import TEXT_EMBEDDING_CHUNK_SIZE, EMBEDDINGS_MODEL
+from hkstp_chatbot.database import load_vectors
 
 def get_col_average_from_list_of_lists(list_of_lists):
     """Return the average of each column in a list of lists."""
@@ -101,7 +101,7 @@ def handle_file_string(file, tokenizer, redis_conn, text_embedding_field, index_
         vectors.append({'id': id, "vector": embedding, 'metadata': {"filename": filename,
                                                                     "text_chunk": text_chunk,
                                                                     "file_chunk_index": i}})
-        time.sleep(5)
+        time.sleep(0.3)
 
     try:
         # Load vectors into Redis

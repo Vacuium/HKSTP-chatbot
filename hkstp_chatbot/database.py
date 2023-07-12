@@ -6,7 +6,7 @@ from redis.commands.search.field import VectorField
 from redis.commands.search.field import TextField, NumericField
 from redis.commands.search.query import Query
 
-from config import EMBEDDINGS_MODEL, PREFIX, VECTOR_FIELD_NAME
+from hkstp_chatbot.config import EMBEDDINGS_MODEL, PREFIX, VECTOR_FIELD_NAME
 
 # Get a Redis connection
 def get_redis_connection(host='redis',password = 'default', port='6379',db=0):
