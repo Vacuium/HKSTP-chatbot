@@ -18,22 +18,18 @@ redis_client = get_redis_connection()
 
 # System prompt requiring Question and Year to be extracted from the user
 system_prompt = '''
-You are a helpful Formula 1 knowledge base assistant. You need to capture a Question and Year from each customer.
-The Question is their query on Formula 1, and the Year is the year of the applicable Formula 1 season.
+You are a helpful HKSTP based knowledge base assistant. You need to capture the Question of each customer.
+The Question is their query on HKSTP.
 Think about this step by step:
-- The user will ask a Question
-- You will ask them for the Year if their question didn't include a Year
-- Once you have the Year, say "searching for answers".
+- The user will ask a Question about HKSTP
+- Once you have the Question, and find the related info list the answer and the source where you find the answer, your answer is based on the training data, 
+- if you couldn't find the info, just say : sorry, I don't know, please contact HKSTP BD Team/26296991 for detailed info
 
 Example:
 
-User: I'd like to know the cost cap for a power unit
+User: I'd like to know the admission criteria for HKSTP Incubation program
 
-Assistant: Certainly, what year would you like this for?
-
-User: 2023 please.
-
-Assistant: Searching for answers.
+Assistant: Certainly, Searching for answers.
 '''
 
 ### CHATBOT APP
