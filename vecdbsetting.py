@@ -1,5 +1,7 @@
 import openai
 import os
+import sys
+sys.path.append(os.path.join(os.getcwd(), 'hkstp_chabot'))
 import requests
 import numpy as np
 import pandas as pd
@@ -76,7 +78,7 @@ except Exception as e:
         definition = IndexDefinition(prefix=[PREFIX], index_type=IndexType.HASH)
     )
 
-data_dir = os.path.join(os.curdir,'data')
+data_dir = os.path.join(os.curdir,'data', 'dire', 'Dire')          # data path
 files_name = sorted([x for x in os.listdir(data_dir) if 'DS_Store' not in x])
 tokenizer = tiktoken.get_encoding("cl100k_base")
 
