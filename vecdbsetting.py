@@ -13,6 +13,7 @@ import configparser
 import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
+logging.info(sys.path)
 
 from redis.commands.search.query import Query
 from redis.commands.search.field import (
