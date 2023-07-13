@@ -1,7 +1,7 @@
 import openai
 import os
 import sys
-sys.path.append(os.path.join(os.getcwd(), 'hkstp_chabot'))
+sys.path.append(os.path.join(os.getcwd(), 'hkstp_chatbot'))
 import requests
 import numpy as np
 import pandas as pd
