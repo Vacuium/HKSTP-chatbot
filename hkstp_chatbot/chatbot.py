@@ -66,10 +66,10 @@ class RetrievalAssistant:
         )['result'][0:10]
         response = ''
         for r in search_content:
-            # response += r
-            logging.info(r)
+            response += r
+            #logging.info(r)
 
-        return search_content
+        return response
         
     def ask_assistant(self, next_user_prompt):
         [self.conversation_history.append(x) for x in next_user_prompt]
