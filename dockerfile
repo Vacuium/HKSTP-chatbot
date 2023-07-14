@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 8501
 
-CMD ["python", "./vecdbsetting.py"]
+CMD ["python", "./hkstp_chatbot/chat.py"]
