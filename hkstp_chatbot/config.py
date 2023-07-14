@@ -7,6 +7,7 @@ PREFIX = "hkstpdocs"
 INDEX_NAME = "hkstp-index"
 VECTOR_DIM = 1536
 DISTANCE_METRIC = "COSINE"
+RETRIEVE_NUM = 8
 
 EXTRACT_METHOD = {
     "pdf"  : "pdfminer",

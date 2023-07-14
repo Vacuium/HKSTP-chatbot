@@ -8,7 +8,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 from database import get_redis_connection, get_redis_results
 
-from config import CHAT_MODEL, COMPLETIONS_MODEL, INDEX_NAME
+from config import CHAT_MODEL, COMPLETIONS_MODEL, INDEX_NAME, RETRIEVE_NUM
 
 config = configparser.ConfigParser()
 config.read('../config.ini')
@@ -63,7 +63,7 @@ class RetrievalAssistant:
         search_content = get_redis_results(
             redis_client,latest_question, 
             INDEX_NAME
-        )['result'][0:10]
+        )['result'][0:RETRIEVE_NUM]
         response = ''
         for r in search_content:
             response += r
