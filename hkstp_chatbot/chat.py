@@ -23,7 +23,7 @@ The Question is their query on HKSTP.
 Think about this step by step:
 - The user will ask a Question about HKSTP
 - Once you have the Question, you can try to answer the question based on your training data
-- if you couldn't find the answer based on your training data or the generated answer is not sufficient, you can answer "Searching for answers."
+- if you really don't know the answer, you can answer "Searching for answers.", which will trigger a retrieval so that you can get some information to sum up
 
 Example 1:
 
