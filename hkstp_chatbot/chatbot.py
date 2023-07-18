@@ -90,12 +90,14 @@ class RetrievalAssistant:
             
             # We insert an extra system prompt here to give fresh context to the Chatbot on how to use the Redis results
             # In this instance we add it to the conversation history, but in production it may be better to hide
-            self.conversation_history.insert(
-                -1,{
+            self.conversation_history.append(
+                {
                 "role": 'system',
                 "content": f'''
-                Answer the user's next question using this content: {search_result}. 
+                Answer the user's last question using this content: {search_result}. 
                 If you cannot answer the question, say 'Sorry, I don't know the answer to this one'
+
+                Answer:
                 '''
                 }
             )
