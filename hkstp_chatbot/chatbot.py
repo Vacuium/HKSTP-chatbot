@@ -94,10 +94,8 @@ class RetrievalAssistant:
                 -1,{
                 "role": 'system',
                 "content": f'''
-                Answer the user's last question using this content: {search_result}. 
+                Answer the user's next question using this content: {search_result}. 
                 If you cannot answer the question, say 'Sorry, I don't know the answer to this one'
-
-                Answer:
                 '''
                 }
             )
