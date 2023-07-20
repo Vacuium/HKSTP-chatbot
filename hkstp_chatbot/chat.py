@@ -2,7 +2,7 @@ import streamlit as st
 from streamlit_chat import message
 
 from database import get_redis_connection
-from chatbot import RetrievalAssistant, Message
+from chatbot import RetrievalAssistant, Message, IncubationAgent
 
 import configparser
 
@@ -68,10 +68,10 @@ if st.button('Submit', key='generationSubmit'):
 
     # Initialization
     if 'chat' not in st.session_state:
-        st.session_state['chat'] = RetrievalAssistant()
-        messages = []
-        system_message = Message('system',system_prompt)
-        messages.append(system_message.message())
+        st.session_state['chat'] = IncubationAgent()
+        # messages = []
+        # system_message = Message('system',system_prompt)
+        # messages.append(system_message.message())
     else:
         messages = []
 

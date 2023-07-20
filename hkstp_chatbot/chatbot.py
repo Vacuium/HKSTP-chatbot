@@ -3,6 +3,12 @@ from termcolor import colored
 import streamlit as st
 import configparser
 import logging
+from langchain import LLMMathChain, OpenAI, SerpAPIWrapper, SQLDatabase, SQLDatabaseChain
+from langchain.tools import BaseTool, StructuredTool, Tool, tool
+from langchain.agents import initialize_agent, Tool
+from langchain.agents import AgentType
+from langchain.chat_models import ChatOpenAI
+from langchain.memory import ConversationBufferMemory
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
 
@@ -128,3 +134,34 @@ class RetrievalAssistant:
                 else:
                     output = colored(f"{prefix}:\n{content}")
                 print(output)
+
+
+class IncubationAgent:
+    def __init__(self):
+        self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
+        self.tools = [
+            Tool(
+                name="HKSTP-Incubation-DB",
+                func=self._get_search_results,
+                description="useful for when you need to answer questions about Incubation of HKSTP. Input should be in the form of a question containing full context"
+            )
+        ]
+        self.memory = ConversationBufferMemory(memory_key="chat_history")
+        self.agent = initialize_agent(self.tools, self.llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory = self.memory)
+
+    def _get_search_results(self, prompt: str) -> str:
+        latest_question = prompt
+        search_content = get_redis_results(
+            redis_client,latest_question, 
+            INDEX_NAME
+        )['result'][0:RETRIEVE_NUM]
+        response = ''
+        for r in search_content:
+            response += r
+            #logging.info(r)
+
+        return response
+    
+    def ask_assistant(self, prompt):
+        rsps = self.agent.run()
+        return rsps
