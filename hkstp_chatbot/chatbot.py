@@ -163,5 +163,5 @@ class IncubationAgent:
         return response
     
     def ask_assistant(self, prompt):
-        rsps = self.agent.run()
+        rsps = self.agent.run(prompt)
         return rsps

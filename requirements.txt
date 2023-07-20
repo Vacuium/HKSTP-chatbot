@@ -10,4 +10,4 @@ jupyter
 ipykernel
 textract
 tiktoken
-langchain[llm]
+langchain
