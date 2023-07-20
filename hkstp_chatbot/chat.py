@@ -76,10 +76,10 @@ if st.button('Submit', key='generationSubmit'):
         messages = []
 
 
-    user_message = Message('user',prompt)
-    messages.append(user_message.message())
+    # user_message = Message('user',prompt)
+    # messages.append(user_message.message())
 
-    response = query(messages)
+    response = query(prompt)
 
     # Debugging step to print the whole response
     #st.write(response)
