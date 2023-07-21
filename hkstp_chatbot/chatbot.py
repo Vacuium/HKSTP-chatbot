@@ -169,10 +169,5 @@ class IncubationAgent:
         return response
     
     def ask_assistant(self, prompt):
-        try:
-             response= self.agent.run(prompt)
-        except Exception as e:
-             response = str(e)
-             if response.startswith("Could not parse LLM output: `"):
-                  response = response.removeprefix("Could not parse LLM output: `").removesuffix("`")
+        response= self.agent.run(prompt)
         return response
