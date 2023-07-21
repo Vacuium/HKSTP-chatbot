@@ -138,7 +138,7 @@ class RetrievalAssistant:
 
 class IncubationAgent:
     def __init__(self):
-        self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
+        self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k")
         self.tools = [
             Tool(
                 name="HKSTP-Incubation-DB",
