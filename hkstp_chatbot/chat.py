@@ -85,7 +85,7 @@ if st.button('Submit', key='generationSubmit'):
     #st.write(response)
 
     st.session_state.past.append(prompt)
-    st.session_state.generated.append(response['content'])
+    st.session_state.generated.append(response)
 
 if st.session_state['generated']:
 
