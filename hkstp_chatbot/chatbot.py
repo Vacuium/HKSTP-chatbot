@@ -152,7 +152,7 @@ class IncubationAgent:
                                       agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, 
                                       verbose=True, 
                                       memory = self.memory,
-                                    #   handle_parsing_errors=True
+                                      handle_parsing_errors='handle_parsing_errors="Check your output and make sure it conforms!"'
                                       )
 
     def _get_search_results(self, prompt: str) -> str:
