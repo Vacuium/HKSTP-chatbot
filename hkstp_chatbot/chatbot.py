@@ -143,7 +143,7 @@ class IncubationAgent:
             Tool(
                 name="HKSTP-Incubation-DB",
                 func=self._get_search_results,
-                description="useful for when you need to answer questions about Incubation of HKSTP. Input should be in the form of a question containing full context"
+                description="useful for when you need to answer questions about Incubation of HKSTP."
             )
         ]
         self.memory = ConversationBufferMemory(memory_key="chat_history")
@@ -152,7 +152,7 @@ class IncubationAgent:
                                       agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, 
                                       verbose=True, 
                                       memory = self.memory,
-                                      handle_parsing_errors=True
+                                    #   handle_parsing_errors=True
                                       )
 
     def _get_search_results(self, prompt: str) -> str:
