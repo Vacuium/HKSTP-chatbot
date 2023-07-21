@@ -4,6 +4,7 @@ import streamlit as st
 import configparser
 import logging
 from langchain import LLMMathChain, OpenAI, SerpAPIWrapper, SQLDatabase, SQLDatabaseChain
+from langchain.prompts import MessagesPlaceholder
 from langchain.tools import BaseTool, StructuredTool, Tool, tool
 from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
@@ -138,20 +139,25 @@ class RetrievalAssistant:
 
 class IncubationAgent:
     def __init__(self):
-        self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
+        self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
         self.tools = [
             Tool(
                 name="HKSTP-Incubation-DB",
                 func=self._get_search_results,
-                description="useful for when you need to answer questions about Incubation of HKSTP."
+                description="useful for when you need to answer questions about Incubation of HKSTP. Input should be in the form of a question containing full context"
             )
         ]
+        self.agent_kwargs = {
+            "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
+        }
+
         self.memory = ConversationBufferMemory(memory_key="chat_history")
         self.agent = initialize_agent(self.tools,
                                       self.llm, 
-                                      agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, 
+                                      agent=AgentType.OPENAI_FUNCTIONS, 
                                       verbose=True, 
                                       memory = self.memory,
+                                      agent_kwargs=self.agent_kwargs,
                                       handle_parsing_errors='Check your output and make sure it conforms!'
                                       )
 
