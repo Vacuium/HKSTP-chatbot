@@ -147,7 +147,12 @@ class IncubationAgent:
             )
         ]
         self.memory = ConversationBufferMemory(memory_key="chat_history")
-        self.agent = initialize_agent(self.tools, self.llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory = self.memory)
+        self.agent = initialize_agent(self.tools,
+                                      self.llm, 
+                                      agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, 
+                                      verbose=True, 
+                                      memory = self.memory,
+                                      handle_parsing_errors=True)
 
     def _get_search_results(self, prompt: str) -> str:
         latest_question = prompt
