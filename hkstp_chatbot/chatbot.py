@@ -151,13 +151,13 @@ class IncubationAgent:
             "extra_prompt_messages": [MessagesPlaceholder(variable_name="memory")],
         }
 
-        self.memory = ConversationBufferMemory(memory_key="chat_history")
+        self.memory = ConversationBufferMemory(memory_key="memory", return_messages=True)
         self.agent = initialize_agent(self.tools,
                                       self.llm, 
                                       agent=AgentType.OPENAI_FUNCTIONS, 
                                       verbose=True, 
-                                      memory = self.memory,
                                       agent_kwargs=self.agent_kwargs,
+                                      memory = self.memory,
                                       handle_parsing_errors='Check your output and make sure it conforms!'
                                       )
 
