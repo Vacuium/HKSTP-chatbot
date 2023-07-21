@@ -138,7 +138,7 @@ class RetrievalAssistant:
 
 class IncubationAgent:
     def __init__(self):
-        self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-16k")
+        self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo")
         self.tools = [
             Tool(
                 name="HKSTP-Incubation-DB",
@@ -152,7 +152,8 @@ class IncubationAgent:
                                       agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, 
                                       verbose=True, 
                                       memory = self.memory,
-                                      handle_parsing_errors=True)
+                                    #   handle_parsing_errors=True
+                                      )
 
     def _get_search_results(self, prompt: str) -> str:
         latest_question = prompt
@@ -168,5 +169,10 @@ class IncubationAgent:
         return response
     
     def ask_assistant(self, prompt):
-        rsps = self.agent.run(prompt)
-        return rsps
+        try:
+             response= self.agent.run(prompt)
+        except Exception as e:
+             response = str(e)
+             if response.startswith("Could not parse LLM output: `"):
+                  response = response.removeprefix("Could not parse LLM output: `").removesuffix("`")
+        return response
