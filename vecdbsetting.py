@@ -79,7 +79,7 @@ except Exception as e:
         definition = IndexDefinition(prefix=[PREFIX], index_type=IndexType.HASH)
     )
 
-data_dir = os.path.join(os.curdir,'data', 'dire', 'Dire')          # data path
+data_dir = os.path.join(os.curdir,'data', 'incubation')          # data path
 files_name = sorted([x for x in os.listdir(data_dir) if 'DS_Store' not in x])
 tokenizer = tiktoken.get_encoding("cl100k_base")
 
