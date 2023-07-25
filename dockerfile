@@ -1,6 +1,5 @@
 FROM hkstpchatbot
 
-
 WORKDIR ./app
 
 COPY . .
@@ -11,5 +10,5 @@ COPY . .
 
 EXPOSE 8501
 
-CMD ["streamlit","run", "./hkstp_chatbot/chat.py"]
-# CMD ["python3", "./vecdbsetting.py"]
+# CMD ["streamlit","run", "./hkstp_chatbot/chat.py"]
+CMD ["python3", "./vecdbsetting.py"]

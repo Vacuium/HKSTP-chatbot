@@ -15,7 +15,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 from database import get_redis_connection, get_redis_results
 
-from config import CHAT_MODEL, COMPLETIONS_MODEL, INDEX_NAME, RETRIEVE_NUM
+from config import CHAT_MODEL, COMPLETIONS_MODEL, INDEX_NAME, RETRIEVE_NUM, TEMPERATURE
 
 config = configparser.ConfigParser()
 config.read('../config.ini')
@@ -139,7 +139,7 @@ class RetrievalAssistant:
 
 class IncubationAgent:
     def __init__(self):
-        self.llm = ChatOpenAI(temperature=0, model="gpt-3.5-turbo-0613")
+        self.llm = ChatOpenAI(temperature=TEMPERATURE, model="gpt-3.5-turbo-0613")
         self.tools = [
             Tool(
                 name="HKSTP-Incubation-DB",
