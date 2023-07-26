@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IncuGPT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    
+    <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet" />
+</head>
+<body>
+    <div id="app">
+        <div id="container">
+            <div class="header">
+                <h1>IncuGPT</h1>
+            </div>
+            <div id="chatcontainer">
+                <div id="chat">
+                    <div v-for="bubble in bubbles" :key="bubble.id" :class="{'chat-bubble-container chat-gpt-bubble-container': bubble.fromChatbot, 'user-bubble-container chat-gpt-bubble-container': !bubble.fromChatbot}">
+                        <div class="chat-bubble-image-container">
+                            <img v-if="bubble.fromChatbot" src="{{url_for('static', filename='images/ChatbotAvator.png')}}" alt="Bot" class="chat-bubble-image" height="100%" />
+                            <img v-else src="{{url_for('static', filename='images/user.png')}}" alt="User" class="chat-bubble-image" height="100%" />
+                        </div>
+                        <div class="chat-bubble" :class="{'chat-gpt-bubble': bubble.fromChatbot, 'user-bubble': !bubble.fromChatbot}">{{ bubble.text }}</div>
+                    </div>
+                </div>
+                <div id="input-area">
+                    <div id="input-container">
+                        <form @submit.prevent="handleSubmit" id="form">
+                            <input type="text" placeholder="Type your message here" v-model="userInput" autocomplete="off" />
+                        </form>
+                        <a @click="handleSubmit"><i class="fas fa-paper-plane"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                bubbles: [
+                    {
+                        id: 1,
+                        text: '...',
+                        fromChatbot: true,
+                    },
+                ],
+                userInput: '',
+            },
+            methods: {
+                handleSubmit() {
+                    if (this.userInput !== '') {
+                        const userString = this.userInput;
+                        const newBubble = {
+                            id: this.bubbles.length + 1,
+                            text: userString,
+                            fromChatbot: false,
+                        };
+                        this.bubbles.push(newBubble);
+                        this.userInput = '';
+
+                        fetch('/submit', {
+                            method: 'POST',
+                            body: JSON.stringify({text: userString}),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.text())
+                        .then(reply => {
+                            let currentText = 0;
+                            const newBubble2 = {
+                                id: this.bubbles.length + 1,
+                                text: '...',
+                                fromChatbot: true,
+                            };
+                            this.bubbles.push(newBubble2);
+                            const textLoop = setInterval(() => {
+                                if (currentText < reply.length) {
+                                    currentText += Math.floor(Math.random() * 10);
+                                    newBubble2.text = reply.slice(0, currentText) + '█';
+                                } else {
+                                    newBubble2.text = reply;
+                                    clearInterval(textLoop);
+                                    this.$nextTick(() => {
+                                        this.$refs.input.focus();
+                                    });
+                                }
+                            }, 100);
+                        })
+                        .catch(error => console.error(error));
+                    }
+                },
+            },
+        });
+    </script>
+</body>
+</html>
