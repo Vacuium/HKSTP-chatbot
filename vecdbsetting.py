@@ -27,7 +27,7 @@ from redis.commands.search.indexDefinition import (
 )
 
 from hkstp_chatbot.database import get_redis_connection
-from hkstp_chatbot.transformers import handle_file_string
+from hkstp_chatbot.transformers import handle_file_string, read_and_clean_pdf_text
 
 # Set our default models and chunking size
 from hkstp_chatbot.config import  VECTOR_FIELD_NAME, INDEX_NAME, VECTOR_DIM, DISTANCE_METRIC, EXTRACT_METHOD, PREFIX
@@ -99,7 +99,8 @@ for file_name in files_name:
     logging.info(file_path)
     
     # Extract the raw text from each PDF using textract
-    text = textract.process(file_path, method = EXTRACT_METHOD.get(extension, None))
+    # text = textract.process(file_path, method = EXTRACT_METHOD.get(extension, None))
+    text = read_and_clean_pdf_text(file_path)
     
     # Chunk each document, embed the contents and load to Redis
     handle_file_string((file_name,text.decode("utf-8")),tokenizer,redis_client,VECTOR_FIELD_NAME,INDEX_NAME)
