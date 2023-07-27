@@ -93,7 +93,7 @@ def extension_extract(file_name: str):
 # Process each PDF file and prepare for embedding
 for file_name in files_name:
 
-    extension = extension_extract(file_name)
+    # extension = extension_extract(file_name)
     
     file_path = os.path.join(data_dir,file_name)
     logging.info(file_path)
@@ -103,7 +103,7 @@ for file_name in files_name:
     text = read_and_clean_pdf_text(file_path)
     
     # Chunk each document, embed the contents and load to Redis
-    handle_file_string((file_name,text.decode("utf-8")),tokenizer,redis_client,VECTOR_FIELD_NAME,INDEX_NAME)
+    handle_file_string((file_name,text[0].decode("utf-8")),tokenizer,redis_client,VECTOR_FIELD_NAME,INDEX_NAME)
 
 # Check that our docs have been inserted
 logging.info(redis_client.ft(INDEX_NAME).info()['num_docs'])
