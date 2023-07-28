@@ -136,7 +136,7 @@ def read_and_clean_pdf_text(fp):
     fc = 0  # Index 0 文本
     fs = 1  # Index 1 字体
     fb = 2  # Index 2 框框
-    REMOVE_FOOT_NOTE = True # 是否丢弃掉 不是正文的内容 （比正文字体小，如参考文献、脚注、图注等）
+    REMOVE_FOOT_NOTE = False # 是否丢弃掉 不是正文的内容 （比正文字体小，如参考文献、脚注、图注等）
     REMOVE_FOOT_FFSIZE_PERCENT = 0.95 # 小于正文的？时，判定为不是正文（有些文章的正文部分字体大小不是100%统一的，有肉眼不可见的小变化）
     def primary_ffsize(l):
         """
