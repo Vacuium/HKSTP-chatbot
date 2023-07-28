@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM hkstpchatbot
 
 WORKDIR ./app
 
@@ -10,6 +10,5 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 5000
 
-CMD ["streamlit","run", "./hkstp_chatbot/app.py"]
+CMD ["flask","run", "./hkstp_chatbot/app.py"]
 # CMD ["python3", "./vecdbsetting.py"]
-# ui test
