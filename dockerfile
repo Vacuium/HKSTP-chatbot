@@ -12,3 +12,4 @@ EXPOSE 5000
 
 CMD ["streamlit","run", "./hkstp_chatbot/app.py"]
 # CMD ["python3", "./vecdbsetting.py"]
+# ui test
