@@ -5,6 +5,9 @@ from chatbot import RetrievalAssistant, Message, IncubationAgent
 
 app = Flask(__name__)
 
+class Config(object):
+    SECRET_KEY = "DJFAJLAJAFKLJQ"
+
 @app.route('/')
 def index():
     init_text = "Hi, I am HKSTP incubation program AI assistant."
@@ -29,4 +32,5 @@ def submit():
     return jsonify({'response': response})
 
 if __name__ == '__main__':
+    app.config.from_object(Config())
     app.run(host = '0.0.0.0', debug=True)
