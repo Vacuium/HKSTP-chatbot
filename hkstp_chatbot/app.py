@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, session
 
-from database import get_redis_connection
-from chatbot import RetrievalAssistant, Message, IncubationAgent
+# from database import get_redis_connection
+# from chatbot import RetrievalAssistant, Message, IncubationAgent
 
 app = Flask(__name__)
 
@@ -18,18 +18,19 @@ def index():
             'fromChatbot': True
         }
     ]
-    return render_template('chat.html', bubble = bubbles)
+    return render_template('chat.html')
 
 @app.route('/submit', methods=['POST'])
 def submit():
     data = request.get_json()
     text = data['text']
-    if 'chat' not in session:
-        session['chat'] = IncubationAgent()
+    # if 'chat' not in session:
+    #     session['chat'] = IncubationAgent()
 
-    response = session['chat'].ask_assistant(text)
+    # response = session['chat'].ask_assistant(text)
 
-    return jsonify({'response': response})
+    # return jsonify({'response': response})
+    return text
 
 if __name__ == '__main__':
     app.config.from_object(Config())

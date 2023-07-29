@@ -16,18 +16,20 @@
             </div>
             <div id="chatcontainer">
                 <div id="chat">
-                    <div v-for="bubble in bubbles" :key="bubble.id" :class="{'chat-bubble-container chat-gpt-bubble-container': bubble.fromChatbot, 'user-bubble-container chat-gpt-bubble-container': !bubble.fromChatbot}">
-                        <div class="chat-bubble-image-container">
+                    <div v-for="bubble in bubbles" :key="bubble.id" :class="{'chat-bubble-container chat-gpt-bubble-container': bubble.fromChatbot, 'chat-bubble-container user-bubble-container': !bubble.fromChatbot}">
+                        <div class="profile-picture">
                             <img v-if="bubble.fromChatbot" src="{{url_for('static', filename='images/ChatbotAvator.png')}}" alt="Bot" class="chat-bubble-image" height="100%" />
                             <img v-else src="{{url_for('static', filename='images/user.png')}}" alt="User" class="chat-bubble-image" height="100%" />
                         </div>
+                        {% raw %}
                         <div class="chat-bubble" :class="{'chat-gpt-bubble': bubble.fromChatbot, 'user-bubble': !bubble.fromChatbot}">{{ bubble.text }}</div>
+                        {% endraw %}
                     </div>
                 </div>
                 <div id="input-area">
                     <div id="input-container">
                         <form @submit.prevent="handleSubmit" id="form">
-                            <input type="text" placeholder="Type your message here" v-model="userInput" autocomplete="off" />
+                            <input type="text" placeholder="Type your message here" v-model="userInput" autocomplete="off" ref="input" />
                         </form>
                         <a @click="handleSubmit"><i class="fas fa-paper-plane"></i></a>
                     </div>
@@ -60,6 +62,7 @@
                         };
                         this.bubbles.push(newBubble);
                         this.userInput = '';
+                        console.log(this.bubbles)
 
                         fetch('/submit', {
                             method: 'POST',
