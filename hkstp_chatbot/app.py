@@ -26,8 +26,9 @@ def submit():
     text = data['text']
     if 'chat' not in session:
         session['chat'] = pickle.dumps(IncubationAgent())
-
-    response = pickle.loads(session['chat']).ask_assistant(text)
+    agent = pickle.loads(session['chat'])
+    response = agent.ask_assistant(text)
+    session['chat'] = pickle.dumps(agent)
 
     return jsonify({'response': response})
 
