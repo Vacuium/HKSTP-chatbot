@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, session
-
-# from database import get_redis_connection
-# from chatbot import RetrievalAssistant, Message, IncubationAgent
+import pickle
+from database import get_redis_connection
+from chatbot import RetrievalAssistant, Message, IncubationAgent
 
 app = Flask(__name__)
 
@@ -24,13 +24,12 @@ def index():
 def submit():
     data = request.get_json()
     text = data['text']
-    # if 'chat' not in session:
-    #     session['chat'] = IncubationAgent()
+    if 'chat' not in session:
+        session['chat'] = pickle.dumps(IncubationAgent())
 
-    # response = session['chat'].ask_assistant(text)
+    response = pickle.loads(session['chat']).ask_assistant(text)
 
-    # return jsonify({'response': response})
-    return text
+    return jsonify({'response': response})
 
 if __name__ == '__main__':
     app.config.from_object(Config())
