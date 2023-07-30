@@ -5,39 +5,58 @@
     <title>IncuGPT</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     
     <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet" />
 </head>
 <body>
     <div id="app">
-        <div id="container">
-            <div class="header">
-                <h1>IncuGPT</h1>
-            </div>
-            <div id="chatcontainer">
-                <div id="chat">
-                    <div v-for="bubble in bubbles" :key="bubble.id" :class="{'chat-bubble-container chat-gpt-bubble-container': bubble.fromChatbot, 'chat-bubble-container user-bubble-container': !bubble.fromChatbot}">
-                        <div class="profile-picture">
-                            <img v-if="bubble.fromChatbot" src="{{url_for('static', filename='images/ChatbotAvator.png')}}" alt="Bot" class="chat-bubble-image" height="100%" />
-                            <img v-else src="{{url_for('static', filename='images/user.png')}}" alt="User" class="chat-bubble-image" height="100%" />
-                        </div>
-                        {% raw %}
-                        <div class="chat-bubble" :class="{'chat-gpt-bubble': bubble.fromChatbot, 'user-bubble': !bubble.fromChatbot}">{{ bubble.text }}</div>
-                        {% endraw %}
-                    </div>
+        <div class="sidebar">
+            <h3>Upload PDF</h3>
+            <el-upload
+                class="upload-demo"
+                ref="upload"
+                action="upload_file"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :file-list="fileList"
+                :auto-upload="false">
+                <el-button class="select-button" slot="trigger" size="small" type="primary">select</el-button>
+                <el-button class="upload-button" style="margin-left: 10px;" size="small" type="success" @click="submitUpload">upload</el-button>
+                <div slot="tip" class="el-upload__tip">Upload PDF file only.</div>
+            </el-upload>
+        </div>
+        <div class="main-content">
+            <div id="container">
+                <div class="header">
+                    <h1>IncuGPT</h1>
                 </div>
-                <div id="input-area">
-                    <div id="input-container">
-                        <form @submit.prevent="handleSubmit" id="form">
-                            <input type="text" placeholder="Type your message here" v-model="userInput" autocomplete="off" ref="input" />
-                        </form>
-                        <a @click="handleSubmit"><i class="fas fa-paper-plane"></i></a>
+                <div id="chatcontainer">
+                    <div id="chat">
+                        <div v-for="bubble in bubbles" :key="bubble.id" :class="{'chat-bubble-container chat-gpt-bubble-container': bubble.fromChatbot, 'chat-bubble-container user-bubble-container': !bubble.fromChatbot}">
+                            <div class="profile-picture">
+                                <img v-if="bubble.fromChatbot" src="{{url_for('static', filename='images/ChatbotAvator.png')}}" alt="Bot" class="chat-bubble-image" height="100%" />
+                                <img v-else src="{{url_for('static', filename='images/user.png')}}" alt="User" class="chat-bubble-image" height="100%" />
+                            </div>
+                            {% raw %}
+                            <div class="chat-bubble" :class="{'chat-gpt-bubble': bubble.fromChatbot, 'user-bubble': !bubble.fromChatbot}">{{ bubble.text }}</div>
+                            {% endraw %}
+                        </div>
+                    </div>
+                    <div id="input-area">
+                        <div id="input-container">
+                            <form @submit.prevent="handleSubmit" id="form">
+                                <input type="text" placeholder="Type your message here" v-model="userInput" autocomplete="off" ref="input" />
+                            </form>
+                            <a @click="handleSubmit"><i class="fas fa-paper-plane"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script>
         new Vue({
             el: '#app',
@@ -50,6 +69,7 @@
                     },
                 ],
                 userInput: '',
+                fileList: [],
             },
             methods: {
                 handleSubmit() {
@@ -95,6 +115,36 @@
                         })
                         .catch(error => console.error(error));
                     }
+                },
+
+                uploadFile() {
+                    // let fileInput = this.$refs.file;
+                    // let file = fileInput.files[0];
+                    let formData = new FormData();
+                    for (file in this.fileList) {
+                        formData.append('file', file);
+                    }
+                    fetch('/upload_file', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.message);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                },
+
+                submitUpload() {
+                    this.$refs.upload.submit();
+                },
+                handleRemove(file, fileList) {
+                    console.log(file, fileList);
+                },
+                handlePreview(file) {
+                    console.log(file);
                 },
             },
         });

@@ -37,7 +37,6 @@ body {
   
   .header {
     padding: 20px;
-    width: 100%;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -182,4 +181,39 @@ body {
   .disclaimer a {
     color: #818f7b;
   
+  }
+
+  .sidebar {
+    width: 15%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    background-color: #010a13;
+    padding: 20px;
+    color: white;
+  }
+
+  .main-content {
+    margin-left: 15%;
+    width: 85%;
+  }
+
+  .select-button{
+    background-color: #43484c;
+    border-color: #43484c;
+  }
+
+  .select-button:focus, .select-button:hover{
+    background-color: #596065;
+    border-color: #596065;
+  }
+
+  .upload-button{
+    background-color: #43484c;
+    border-color: #43484c;
+  }
+
+  .upload-button:focus, .upload-button:hover{
+    background-color: #596065;
+    border-color: #596065;
   }
