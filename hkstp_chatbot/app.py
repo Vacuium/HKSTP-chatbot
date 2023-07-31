@@ -2,6 +2,10 @@ from flask import Flask, request, jsonify, render_template, session
 import pickle
 from database import get_redis_connection
 from chatbot import RetrievalAssistant, Message, IncubationAgent
+import logging
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        level=logging.INFO)
 
 app = Flask(__name__)
 
@@ -29,7 +33,7 @@ def submit():
     agent = pickle.loads(session['chat'])
     response = agent.ask_assistant(text)
     session['chat'] = pickle.dumps(agent)
-
+    logging.info(response)
     return response
 
 if __name__ == '__main__':

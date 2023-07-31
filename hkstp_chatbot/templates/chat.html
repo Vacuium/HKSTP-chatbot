@@ -82,7 +82,7 @@
                             this.bubbles.push(newBubble2);
                             const textLoop = setInterval(() => {
                                 if (currentText < reply.length) {
-                                    currentText += Math.floor(Math.random() * 10);
+                                    currentText += Math.floor(Math.random() * 50);
                                     newBubble2.text = reply.slice(0, currentText) + '█';
                                 } else {
                                     newBubble2.text = reply;
