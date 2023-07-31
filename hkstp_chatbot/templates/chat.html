@@ -22,7 +22,7 @@
                             <img v-else src="{{url_for('static', filename='images/user.png')}}" alt="User" class="chat-bubble-image" height="100%" />
                         </div>
                         {% raw %}
-                        <div class="chat-bubble" :class="{'chat-gpt-bubble': bubble.fromChatbot, 'user-bubble': !bubble.fromChatbot}" style="white-space: pre">{{ bubble.text }}</div>
+                        <div class="chat-bubble" :class="{'chat-gpt-bubble': bubble.fromChatbot, 'user-bubble': !bubble.fromChatbot}" style="white-space: pre-line">{{ bubble.text }}</div>
                         {% endraw %}
                     </div>
                 </div>
