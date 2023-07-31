@@ -10,5 +10,5 @@ COPY . .
 
 EXPOSE 5000
 
-# CMD ["python", "./hkstp_chatbot/app.py"]
-CMD ["python3", "./vecdbsetting.py"]
+CMD ["python", "./hkstp_chatbot/app.py"]
+# CMD ["python3", "./vecdbsetting.py"]
