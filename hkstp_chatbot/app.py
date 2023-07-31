@@ -30,7 +30,7 @@ def submit():
     response = agent.ask_assistant(text)
     session['chat'] = pickle.dumps(agent)
 
-    return jsonify(response)
+    return response
 
 if __name__ == '__main__':
     app.config.from_object(Config())
