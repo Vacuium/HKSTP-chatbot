@@ -3,7 +3,7 @@ from termcolor import colored
 import streamlit as st
 import configparser
 import logging
-from langchain import LLMMathChain, OpenAI, SerpAPIWrapper, SQLDatabase, SQLDatabaseChain
+from langchain import LLMMathChain, OpenAI, SerpAPIWrapper, SQLDatabase
 from langchain.prompts import MessagesPlaceholder
 from langchain.tools import BaseTool, StructuredTool, Tool, tool
 from langchain.agents import initialize_agent, Tool
