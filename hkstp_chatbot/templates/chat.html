@@ -71,57 +71,59 @@
                         };
                         this.bubbles.push(newBubble2);
                         
-                        const response = await fetch('/submit', {
-                            method: 'POST',
-                            body: JSON.stringify({text: userString}),
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        });
-
-                        const stream = response.body.getReader();
-                        newBubble2.text = ''
-                        while (true) {
-                        const { done, value } = await stream.read();
-                        if (done) {
-                            break;
-                        }
-                        const textChunk = new TextDecoder().decode(value);
-                        newBubble2.text += textChunk
-                        }
                         // const response = await fetch('/submit', {
                         //     method: 'POST',
-                        //     body: JSON.stringify({ text: userString }),
+                        //     body: JSON.stringify({text: userString}),
                         //     headers: {
-                        //         'Content-Type': 'application/json',
-                        //         'Accept': 'text/plain', // Set the Accept header to receive plain text response
-                        //     },
-                        // });
-
-                        // const reader = response.body.getReader();
-                        // let receivedText = '';
-
-                        // const processStream = async () => {
-                        //     while (true) {
-                        //         const { done, value } = await reader.read();
-                        //         if (done) {
-                        //             break;
-                        //         }
-                        //         const textChunk = new TextDecoder().decode(value);
-                        //         receivedText += textChunk;
-                        //         newBubble2.text = receivedText;
-                        //         // Scroll to the bottom of the chat container to show the latest response
-                        //         this.$nextTick(() => {
-                        //             const chatContainer = document.getElementById('chat');
-                        //             chatContainer.scrollTop = chatContainer.scrollHeight;
-                        //         });
+                        //         'Content-Type': 'application/json'
                         //     }
-                        // };
-
-                        // processStream().catch(error => {
-                        //     console.error(error);
-                        //     newBubble2.text = 'An error occurred while receiving the response.';
                         // });
+
+                        // const stream = response.body.getReader();
+                        // newBubble2.text = ''
+                        // while (true) {
+                        // const { done, value } = await stream.read();
+                        // if (done) {
+                        //     break;
+                        // }
+                        // const textChunk = new TextDecoder().decode(value);
+                        // newBubble2.text += textChunk
+                        // }
+
+                        const response = await fetch('/submit', {
+                            method: 'POST',
+                            body: JSON.stringify({ text: userString }),
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'text/plain', // Set the Accept header to receive plain text response
+                            },
+                        });
+
+                        const reader = response.body.getReader();
+                        let receivedText = '';
+
+                        const processStream = async () => {
+                            while (true) {
+                                const { done, value } = await reader.read();
+                                if (done) {
+                                    break;
+                                }
+                                const textChunk = new TextDecoder().decode(value);
+                                receivedText += textChunk;
+                                newBubble2.text = receivedText;
+                                // Scroll to the bottom of the chat container to show the latest response
+                                this.$nextTick(() => {
+                                    const chatContainer = document.getElementById('chat');
+                                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                                });
+                            }
+                        };
+
+                        processStream().catch(error => {
+                            console.error(error);
+                            newBubble2.text = 'An error occurred while receiving the response.';
+                        });
+                        
                         // fetch('/submit', {
                         //     method: 'POST',
                         //     body: JSON.stringify({text: userString}),

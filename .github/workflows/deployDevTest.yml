@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Deploy to Server
+      - name: Deploy to Server for Dev
         uses: AEnterprise/rsync-deploy@v1.0.2
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
@@ -24,7 +24,7 @@ jobs:
           FOLDER: "./"
           SERVER_IP: ${{ secrets.SSH_HOST }}
           USERNAME: ${{ secrets.SSH_USERNAME }}
-          SERVER_DESTINATION: ${{ secrets.SERVER_DESTINATION }}
+          SERVER_DESTINATION: ${{ secrets.SERVER_DESTINATION_DEV }}  #TODO build test env
 
       # - name: Restart Chatbot
       #   uses: appleboy/ssh-action@master
