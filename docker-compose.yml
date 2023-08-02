@@ -2,17 +2,17 @@ version: '3'
 services:
   chatbot:
     build: .
-    image: hkstpchatbot
+    image: hkstpchatbot-dev
     environment:
       OPENAI_API_KEY: '${API_KEY}'
     ports:
-      - "22303:5000"
+      - "8501:5000"
     depends_on:
       - redis
 
   redis:
     image: redis/redis-stack
     ports:
-      - "6379:6379"
+      - "9736:6379"
       - "8001:8001"
 
