@@ -9,7 +9,7 @@ from redis.commands.search.query import Query
 from config import EMBEDDINGS_MODEL, PREFIX, VECTOR_FIELD_NAME
 
 # Get a Redis connection
-def get_redis_connection(host='redis',password = 'default', port='9736',db=0):
+def get_redis_connection(host='redis',password = 'default', port='6379',db=0):
     
     r = Redis(host=host, port=port, db=db,decode_responses=False)
     return r
