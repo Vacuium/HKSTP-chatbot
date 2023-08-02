@@ -6,7 +6,7 @@ services:
     environment:
       OPENAI_API_KEY: '${API_KEY}'
     ports:
-      - "8501:5000"
+      - "22303:5000"
     depends_on:
       - redis
 
@@ -15,4 +15,4 @@ services:
     ports:
       - "9736:6379"
       - "8002:8001"
-
+    expose: "9736"
