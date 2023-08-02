@@ -18,12 +18,12 @@ jobs:
       - name: Deploy to Server for Dev
         uses: AEnterprise/rsync-deploy@v1.0.2
         env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY_DEV }}
           ARGS: -avz --exclude='config.ini'
-          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT_DEV }}
           FOLDER: "./"
-          SERVER_IP: ${{ secrets.SSH_HOST }}
-          USERNAME: ${{ secrets.SSH_USERNAME }}
+          SERVER_IP: ${{ secrets.SSH_HOST_DEV }}
+          USERNAME: ${{ secrets.SSH_USERNAME_DEV }}
           SERVER_DESTINATION: ${{ secrets.SERVER_DESTINATION_DEV }}  #TODO build test env
 
       # - name: Restart Chatbot

@@ -1,12 +1,11 @@
-FROM hkstpchatbot
+FROM python:3.10
 
 WORKDIR ./app
 
 COPY . .
 
-# RUN pip install pip update
-# RUN pip3 install -r requirements.txt
-# RUN cd ./hkstp_chatbot
+RUN pip install pip update
+RUN pip3 install -r requirements.txt
 
 EXPOSE 5000
 
