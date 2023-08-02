@@ -26,17 +26,17 @@ jobs:
           USERNAME: ${{ secrets.SSH_USERNAME }}
           SERVER_DESTINATION: ${{ secrets.SERVER_DESTINATION_DEV }}  #TODO build test env
 
-      - name: Restart Chatbot
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          port: ${{ secrets.SERVER_PORT }}
+      # - name: Restart Chatbot
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.SSH_HOST }}
+      #     username: ${{ secrets.SSH_USERNAME }}
+      #     key: ${{ secrets.DEPLOY_KEY }}
+      #     port: ${{ secrets.SERVER_PORT }}
 
-          script: |
-            cd ${{ secrets.SERVER_DESTINATION_DEV }}
-            sudo docker compose up
+      #     script: |
+      #       cd ${{ secrets.SERVER_DESTINATION_DEV }}
+      #       sudo docker compose up
 
 
-          # sudo docker compose up -d --force-recreate --no-deps chatbot
+      #     # sudo docker compose up -d --force-recreate --no-deps chatbot
