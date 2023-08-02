@@ -32,6 +32,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.DEPLOY_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
 
           script: |
             cd ${{ secrets.SERVER_DESTINATION_DEV }}
