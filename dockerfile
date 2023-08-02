@@ -4,8 +4,8 @@ WORKDIR .
 
 COPY . .
 
-RUN pip install pip update
-RUN pip3 install -r requirements.txt
+# RUN pip install pip update
+# RUN pip3 install -r requirements.txt
 
 EXPOSE 5000
 
