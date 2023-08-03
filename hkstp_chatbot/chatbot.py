@@ -2,6 +2,9 @@ import openai
 from termcolor import colored
 import streamlit as st
 import configparser
+import threading
+import queue
+
 import logging
 from langchain import LLMMathChain, OpenAI, SerpAPIWrapper, SQLDatabase
 from langchain.prompts import MessagesPlaceholder
@@ -10,6 +13,7 @@ from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
+# from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.callbacks.streaming_stdout_final_only import (
     FinalStreamingStdOutCallbackHandler,
 )
@@ -142,8 +146,8 @@ class RetrievalAssistant:
 
 
 class IncubationAgent:
-    def __init__(self):
-        self.llm = ChatOpenAI(streaming=True, callbacks=[FinalStreamingStdOutCallbackHandler()], temperature=TEMPERATURE, model="gpt-3.5-turbo-0613")
+    def __init__(self, call_backs):
+        self.llm = ChatOpenAI(streaming=True, callbacks=call_backs, temperature=TEMPERATURE, model="gpt-3.5-turbo-0613")
         self.tools = [
             Tool(
                 name="HKSTP-Incubation-DB",
@@ -181,3 +185,44 @@ class IncubationAgent:
     def ask_assistant(self, prompt):
         response= self.agent.run(prompt)
         return response
+
+class ThreadedGenerator:
+    def __init__(self):
+        self.queue = queue.Queue()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        item = self.queue.get()
+        if item is StopIteration: raise item
+        return item
+
+    def send(self, data):
+        self.queue.put(data)
+
+    def close(self):
+        self.queue.put(StopIteration)
+
+class FlaskAgentStreamHandler(FinalStreamingStdOutCallbackHandler):
+    def __init__(self, gen):
+        super().__init__()
+        self.gen = gen
+
+    def on_llm_new_token(self, token: str, **kwargs):
+        """Run on new LLM token. Only available when streaming is enabled."""
+
+        # Remember the last n tokens, where n = len(answer_prefix_tokens)
+        self.append_to_last_tokens(token)
+
+        # Check if the last n tokens match the answer_prefix_tokens list ...
+        if self.check_if_answer_reached():
+            self.answer_reached = True
+            if self.stream_prefix:
+                for t in self.last_tokens:
+                    self.gen.send(t)
+            return
+
+        # ... if yes, then print tokens from now on
+        if self.answer_reached:
+            self.gen.send(token)

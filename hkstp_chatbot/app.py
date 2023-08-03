@@ -1,7 +1,9 @@
-from flask import Flask, request, jsonify, render_template, session
+from flask import Flask, request, jsonify, render_template, session, Response
+import threading
+import queue
 import pickle
 from database import get_redis_connection
-from chatbot import RetrievalAssistant, Message, IncubationAgent
+from chatbot import RetrievalAssistant, Message, IncubationAgent, ThreadedGenerator
 import logging
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -24,6 +26,19 @@ def index():
     ]
     return render_template('chat.html')
 
+def agent_thread(g, agent, prompt):
+    try:
+        agent.run(prompt)
+    finally:
+        g.close()
+        session['chat'] = pickle.dumps(agent)
+
+
+def chain(agent, prompt):
+    g = ThreadedGenerator()
+    threading.Thread(target=agent_thread, args=(g, agent, prompt)).start()
+    return g
+
 @app.route('/submit', methods=['POST'])
 def submit():
     data = request.get_json()
@@ -31,11 +46,11 @@ def submit():
     if 'chat' not in session:
         session['chat'] = pickle.dumps(IncubationAgent())
     agent = pickle.loads(session['chat'])
-    response = agent.ask_assistant(text)
-    session['chat'] = pickle.dumps(agent)
-    logging.info(response)
-    return response
+    # response = agent.ask_assistant(text)
+    # session['chat'] = pickle.dumps(agent)
+    # logging.info(response)
+    return Response(chain(agent = agent, prompt = text), mimetype='text/plain')
 
 if __name__ == '__main__':
     app.config.from_object(Config())
-    app.run(host = '0.0.0.0', debug=True)
+    app.run(host = '0.0.0.0', debug=True, threaded = True)
