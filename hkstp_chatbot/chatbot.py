@@ -184,7 +184,7 @@ class IncubationAgent:
     
     def ask_assistant(self, prompt):
         response= self.agent.run(prompt)
-        return response
+        # return response
 
 class ThreadedGenerator:
     def __init__(self):

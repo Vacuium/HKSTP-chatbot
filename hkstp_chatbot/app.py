@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, session, Response
+from flask import Flask, request, jsonify, render_template, session, Response, copy_current_request_context
 import threading
 import queue
 import pickle
@@ -26,9 +26,10 @@ def index():
     ]
     return render_template('chat.html')
 
+@copy_current_request_context
 def agent_thread(g, agent, prompt):
     try:
-        agent.run(prompt)
+        agent.ask_assistant(prompt)
     finally:
         g.close()
         session['chat'] = pickle.dumps(agent)
