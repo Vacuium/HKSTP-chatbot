@@ -146,8 +146,8 @@ class RetrievalAssistant:
 
 
 class IncubationAgent:
-    def __init__(self, call_backs):
-        self.llm = ChatOpenAI(streaming=True, callbacks=call_backs, temperature=TEMPERATURE, model="gpt-3.5-turbo-0613")
+    def __init__(self):
+        self.llm = ChatOpenAI(streaming=True, callbacks=[FlaskAgentStreamHandler()], temperature=TEMPERATURE, model="gpt-3.5-turbo-0613")
         self.tools = [
             Tool(
                 name="HKSTP-Incubation-DB",

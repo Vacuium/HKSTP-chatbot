@@ -26,22 +26,19 @@ def index():
     ]
     return render_template('chat.html')
 
+def agent_thread(g, agent, prompt):
+    try:
+        agent.ask_assistant(prompt)
+    finally:
+        g.close()
+
+def chain(agent, prompt):
+    g = ThreadedGenerator()
+    threading.Thread(target=agent_thread, args=(g, agent, prompt)).start()
+    return g
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    @copy_current_request_context
-    def agent_thread(g, agent, prompt):
-        try:
-            agent.ask_assistant(prompt)
-        finally:
-            g.close()
-            session['chat'] = pickle.dumps(agent)
-
-    def chain(agent, prompt):
-        g = ThreadedGenerator()
-        threading.Thread(target=agent_thread, args=(g, agent, prompt)).start()
-        return g
-    
     data = request.get_json()
     text = data['text']
     if 'chat' not in session:
@@ -50,7 +47,10 @@ def submit():
     # response = agent.ask_assistant(text)
     # session['chat'] = pickle.dumps(agent)
     # logging.info(response)
-    return Response(chain(agent = agent, prompt = text), mimetype='text/plain')
+    try:
+        return Response(chain(agent = agent, prompt = text), mimetype='text/plain')
+    finally:
+        session['chat'] = pickle.dumps(agent)
 
 if __name__ == '__main__':
     app.config.from_object(Config())
