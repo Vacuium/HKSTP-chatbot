@@ -186,8 +186,13 @@ class IncubationAgent:
         response= self.agent.run(prompt)
         # return response
 
-    def reload_llm(self, callback_generator, temperature = TEMPERATURE, model = "gpt-3.5-turbo-0613"):
-        self.llm = ChatOpenAI(streaming=True, callbacks=[FlaskAgentStreamHandler(callback_generator)], temperature=temperature, model=model)
+    def reload_llm(self, callback_generator = None, temperature = TEMPERATURE, model = "gpt-3.5-turbo-0613"):
+        if callback_generator == None:
+            callbacks = [FinalStreamingStdOutCallbackHandler()]
+        else:
+            callbacks = [FlaskAgentStreamHandler(callback_generator)]
+
+        self.llm = ChatOpenAI(streaming=True, callbacks=callbacks, temperature=temperature, model=model)
         self.agent = initialize_agent(self.tools,
                                       self.llm, 
                                       agent=AgentType.OPENAI_FUNCTIONS, 
