@@ -54,6 +54,7 @@ def submit():
     try:
         return Response(chain(agent = agent, prompt = text), mimetype='text/plain')
     finally:
+        agent.reload_llm()
         session['chat'] = pickle.dumps(agent)
 
 if __name__ == '__main__':
