@@ -147,7 +147,7 @@ class RetrievalAssistant:
 
 class IncubationAgent:
     def __init__(self):
-        self.llm = ChatOpenAI(streaming=True, callbacks=[FlaskAgentStreamHandler()], temperature=TEMPERATURE, model="gpt-3.5-turbo-0613")
+        self.llm = ChatOpenAI(streaming=True, callbacks=[FinalStreamingStdOutCallbackHandler()], temperature=TEMPERATURE, model="gpt-3.5-turbo-0613")
         self.tools = [
             Tool(
                 name="HKSTP-Incubation-DB",
@@ -185,6 +185,17 @@ class IncubationAgent:
     def ask_assistant(self, prompt):
         response= self.agent.run(prompt)
         # return response
+
+    def reload_llm(self, callback_generator, temperature = TEMPERATURE, model = "gpt-3.5-turbo-0613"):
+        self.llm = ChatOpenAI(streaming=True, callbacks=[FlaskAgentStreamHandler(callback_generator)], temperature=temperature, model=model)
+        self.agent = initialize_agent(self.tools,
+                                      self.llm, 
+                                      agent=AgentType.OPENAI_FUNCTIONS, 
+                                      verbose=True, 
+                                      agent_kwargs=self.agent_kwargs,
+                                      memory = self.memory,
+                                      handle_parsing_errors='Check your output and make sure it conforms!'
+                                      )
 
 class ThreadedGenerator:
     def __init__(self):

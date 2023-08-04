@@ -28,7 +28,10 @@ def index():
 
 def agent_thread(g, agent, prompt):
     try:
-        agent.ask_assistant(prompt)
+        # reload llm inside agent with thread generator
+        agent.reload_llm(g)
+        response = agent.ask_assistant(prompt)
+        logging.info(response)
     finally:
         g.close()
 
@@ -44,6 +47,7 @@ def submit():
     if 'chat' not in session:
         session['chat'] = pickle.dumps(IncubationAgent())
     agent = pickle.loads(session['chat'])
+    logging.info(text)
     # response = agent.ask_assistant(text)
     # session['chat'] = pickle.dumps(agent)
     # logging.info(response)
