@@ -44,9 +44,10 @@ def chain(agent, prompt):
 def submit():
     data = request.get_json()
     text = data['text']
-    if 'chat' not in session:
-        session['chat'] = pickle.dumps(IncubationAgent())
-    agent = pickle.loads(session['chat'])
+    # if 'chat' not in session:
+    #     session['chat'] = pickle.dumps(IncubationAgent())
+    # agent = pickle.loads(session['chat'])
+    agent = IncubationAgent()
     logging.info(text)
     # response = agent.ask_assistant(text)
     # session['chat'] = pickle.dumps(agent)
@@ -55,7 +56,8 @@ def submit():
         return Response(chain(agent = agent, prompt = text), mimetype='text/plain')
     finally:
         agent.reload_llm()
-        session['chat'] = pickle.dumps(agent)
+        logging.info("Response done")
+        # session['chat'] = pickle.dumps(agent)
 
 if __name__ == '__main__':
     app.config.from_object(Config())
