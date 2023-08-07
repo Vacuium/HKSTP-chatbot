@@ -184,7 +184,7 @@ class IncubationAgent:
     
     def ask_assistant(self, prompt):
         response= self.agent.run(prompt)
-        # return response
+        return response
 
     def reload_llm(self, callback_generator = None, temperature = TEMPERATURE, model = "gpt-3.5-turbo-0613"):
         if callback_generator == None:
