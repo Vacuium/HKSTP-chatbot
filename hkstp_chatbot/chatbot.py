@@ -242,4 +242,5 @@ class FlaskAgentStreamHandler(FinalStreamingStdOutCallbackHandler):
 
         # ... if yes, then print tokens from now on
         if self.answer_reached:
+            logging.info(token)
             self.gen.send(token)
