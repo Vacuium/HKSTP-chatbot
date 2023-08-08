@@ -18,13 +18,13 @@ jobs:
       - name: Deploy to Server for Dev
         uses: AEnterprise/rsync-deploy@v1.0.2
         env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY_DEV }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
           ARGS: -avz --exclude='config.ini'
-          SERVER_PORT: ${{ secrets.SERVER_PORT_DEV }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
           FOLDER: "./"
-          SERVER_IP: ${{ secrets.SSH_HOST_DEV }}
-          USERNAME: ${{ secrets.SSH_USERNAME_DEV }}
-          SERVER_DESTINATION: ${{ secrets.SERVER_DESTINATION_DEV }}  #TODO build test env
+          SERVER_IP: ${{ secrets.SSH_HOST }}
+          USERNAME: ${{ secrets.SSH_USERNAME }}
+          SERVER_DESTINATION: ${{ secrets.SERVER_DESTINATION }}
 
       # - name: Restart Chatbot
       #   uses: appleboy/ssh-action@master
