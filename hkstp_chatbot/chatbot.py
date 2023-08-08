@@ -17,6 +17,7 @@ from langchain.memory import ConversationBufferMemory
 from langchain.callbacks.streaming_stdout_final_only import (
     FinalStreamingStdOutCallbackHandler,
 )
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
@@ -190,7 +191,9 @@ class IncubationAgent:
         if callback_generator == None:
             callbacks = [FinalStreamingStdOutCallbackHandler()]
         else:
-            callbacks = [FlaskAgentStreamHandler(callback_generator)]
+            # callbacks = [FlaskAgentStreamHandler(callback_generator)]
+            callbacks = [ChainStreamHandler(callback_generator)]
+            logging.info("callback handler switched")
 
         self.llm = ChatOpenAI(streaming=True, callbacks=callbacks, temperature=temperature, model=model)
         self.agent = initialize_agent(self.tools,
@@ -220,6 +223,14 @@ class ThreadedGenerator:
 
     def close(self):
         self.queue.put(StopIteration)
+
+class ChainStreamHandler(StreamingStdOutCallbackHandler):
+    def __init__(self, gen):
+        super().__init__()
+        self.gen = gen
+
+    def on_llm_new_token(self, token: str, **kwargs):
+        self.gen.send(token)
 
 class FlaskAgentStreamHandler(FinalStreamingStdOutCallbackHandler):
     def __init__(self, gen):
