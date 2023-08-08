@@ -70,6 +70,8 @@
                             fromChatbot: true,
                         };
                         this.bubbles.push(newBubble2);
+                        const chatContainer_input = document.getElementById('chatcontainer');
+                        chatContainer_input.scrollTop = chatContainer_input.scrollHeight;
                         
                         // const response = await fetch('/submit', {
                         //     method: 'POST',
@@ -114,7 +116,7 @@
                                 newBubble2.text = receivedText;
                                 // Scroll to the bottom of the chat container to show the latest response
                                 this.$nextTick(() => {
-                                    const chatContainer = document.getElementById('chat');
+                                    const chatContainer = document.getElementById('chatcontainer');
                                     chatContainer.scrollTop = chatContainer.scrollHeight;
                                 });
                             }
