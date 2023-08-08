@@ -13,7 +13,8 @@ from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
-# from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from langchain.memory.chat_memory import ChatMessageHistory
+from langchain.schema import messages_from_dict, messages_to_dict
 from langchain.callbacks.streaming_stdout_final_only import (
     FinalStreamingStdOutCallbackHandler,
 )
@@ -161,6 +162,9 @@ class IncubationAgent:
         }
 
         self.memory = ConversationBufferMemory(memory_key="memory", return_messages=True)
+        self.load_agent()
+
+    def load_agent(self):
         self.agent = initialize_agent(self.tools,
                                       self.llm, 
                                       agent=AgentType.OPENAI_FUNCTIONS, 
@@ -190,8 +194,7 @@ class IncubationAgent:
     def reload_llm(self, 
                    callback_generator = None, 
                    temperature = TEMPERATURE, 
-                   model = "gpt-3.5-turbo-0613", 
-                   memory = ConversationBufferMemory(memory_key="memory", return_messages=True)
+                   model = "gpt-3.5-turbo-0613",
                    ):
         if callback_generator == None:
             callbacks = [FinalStreamingStdOutCallbackHandler()]
@@ -200,15 +203,18 @@ class IncubationAgent:
             logging.info("callback handler switched")
 
         self.llm = ChatOpenAI(streaming=True, callbacks=callbacks, temperature=temperature, model=model)
-        self.memory = memory
-        self.agent = initialize_agent(self.tools,
-                                      self.llm, 
-                                      agent=AgentType.OPENAI_FUNCTIONS, 
-                                      verbose=True, 
-                                      agent_kwargs=self.agent_kwargs,
-                                      memory = self.memory,
-                                      handle_parsing_errors='Check your output and make sure it conforms!'
-                                      )
+        self.load_agent()
+        
+    def extract_memory(self) -> list:
+        extracted_messages = self.agent.memory.chat_memory.messages
+        return messages_to_dict(extracted_messages)
+    
+    def load_memory(self, memory_dicts: list) -> None:
+        loaded_messages = messages_from_dict(memory_dicts)
+        loaded_history = ChatMessageHistory(messages = loaded_messages)
+        self.memory = ConversationBufferMemory(chat_memory = loaded_history, memory_key="memory", return_messages=True)
+        self.load_agent()
+
 
 class ThreadedGenerator:
     def __init__(self):
