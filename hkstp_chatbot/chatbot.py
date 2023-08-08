@@ -215,7 +215,7 @@ class ThreadedGenerator:
         return item
 
     def send(self, data):
-        logging.info(data)
+        logging.info(1)
         self.queue.put(data)
 
     def close(self):
