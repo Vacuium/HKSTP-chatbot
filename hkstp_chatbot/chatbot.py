@@ -187,15 +187,20 @@ class IncubationAgent:
         response= self.agent.run(prompt)
         return response
 
-    def reload_llm(self, callback_generator = None, temperature = TEMPERATURE, model = "gpt-3.5-turbo-0613"):
+    def reload_llm(self, 
+                   callback_generator = None, 
+                   temperature = TEMPERATURE, 
+                   model = "gpt-3.5-turbo-0613", 
+                   memory = ConversationBufferMemory(memory_key="memory", return_messages=True)
+                   ):
         if callback_generator == None:
             callbacks = [FinalStreamingStdOutCallbackHandler()]
         else:
-            # callbacks = [FlaskAgentStreamHandler(callback_generator)]
             callbacks = [ChainStreamHandler(callback_generator)]
             logging.info("callback handler switched")
 
         self.llm = ChatOpenAI(streaming=True, callbacks=callbacks, temperature=temperature, model=model)
+        self.memory = memory
         self.agent = initialize_agent(self.tools,
                                       self.llm, 
                                       agent=AgentType.OPENAI_FUNCTIONS, 
@@ -218,7 +223,7 @@ class ThreadedGenerator:
         return item
 
     def send(self, data):
-        logging.info(1)
+        # logging.info(1)
         self.queue.put(data)
 
     def close(self):
@@ -232,26 +237,4 @@ class ChainStreamHandler(StreamingStdOutCallbackHandler):
     def on_llm_new_token(self, token: str, **kwargs):
         self.gen.send(token)
 
-class FlaskAgentStreamHandler(FinalStreamingStdOutCallbackHandler):
-    def __init__(self, gen):
-        super().__init__()
-        self.gen = gen
 
-    def on_llm_new_token(self, token: str, **kwargs):
-        """Run on new LLM token. Only available when streaming is enabled."""
-
-        # Remember the last n tokens, where n = len(answer_prefix_tokens)
-        self.append_to_last_tokens(token)
-
-        # Check if the last n tokens match the answer_prefix_tokens list ...
-        if self.check_if_answer_reached():
-            self.answer_reached = True
-            if self.stream_prefix:
-                for t in self.last_tokens:
-                    self.gen.send(t)
-            return
-
-        # ... if yes, then print tokens from now on
-        if self.answer_reached:
-            logging.info(token)
-            self.gen.send(token)

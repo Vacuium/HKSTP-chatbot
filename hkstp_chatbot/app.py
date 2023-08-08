@@ -26,38 +26,35 @@ def index():
     ]
     return render_template('chat.html')
 
-def agent_thread(g, agent, prompt):
+def agent_thread(g, agent, prompt, memory):
     try:
         # reload llm inside agent with thread generator
-        agent.reload_llm(g)
+        agent.reload_llm(callback_generator = g, memory = memory)
         response = agent.ask_assistant(prompt)
         logging.info(response)
     finally:
         g.close()
 
-def chain(agent, prompt):
+def chain(agent, prompt, memory):
     g = ThreadedGenerator()
-    threading.Thread(target=agent_thread, args=(g, agent, prompt)).start()
+    threading.Thread(target=agent_thread, args=(g, agent, prompt, memory)).start()
     return g
 
 @app.route('/submit', methods=['POST'])
 def submit():
     data = request.get_json()
     text = data['text']
-    # if 'chat' not in session:
-    #     session['chat'] = pickle.dumps(IncubationAgent())
-    # agent = pickle.loads(session['chat'])
+    if 'chat' not in session:
+        session_memory = IncubationAgent().memory
+        session['chat'] = pickle.dumps(session_memory)
     agent = IncubationAgent()
+    session_memory = pickle.loads(session['chat'])
     logging.info(text)
-    # response = agent.ask_assistant(text)
-    # session['chat'] = pickle.dumps(agent)
-    # logging.info(response)
     try:
-        return Response(chain(agent = agent, prompt = text), mimetype='text/plain')
+        return Response(chain(agent = agent, prompt = text, memory = session_memory), mimetype='text/plain')
     finally:
-        agent.reload_llm()
         logging.info("Response done")
-        # session['chat'] = pickle.dumps(agent)
+        session['chat'] = pickle.dumps(agent.memory)
 
 if __name__ == '__main__':
     app.config.from_object(Config())
