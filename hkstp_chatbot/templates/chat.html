@@ -108,7 +108,7 @@
                                 if (done) {
                                     break;
                                 }
-                                const textChunk = new TextDecoder().decode(value);
+                                const textChunk = new TextDecoder().decode(value, {stream: true});
                                 receivedText += textChunk;
                                 newBubble2.text = receivedText;
                                 // Scroll to the bottom of the chat container to show the latest response
