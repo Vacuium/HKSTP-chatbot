@@ -46,6 +46,7 @@ def submit():
     text = data['text']
     agent = IncubationAgent()
     if 'chat' in session:
+        logging.info("session chat exits")
         chat_messages = session['chat']
         logging.info(f"chat_messages: {chat_messages}")
         agent.load_memory(chat_messages)
