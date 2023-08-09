@@ -24,6 +24,7 @@ def index():
             'fromChatbot': True
         }
     ]
+    session['chat'] = IncubationAgent().extract_memory()
     return render_template('chat.html')
 
 def agent_thread(g, agent, prompt):
@@ -47,9 +48,9 @@ def submit():
     agent = IncubationAgent()
     if 'chat' in session:
         logging.info("session chat exits")
-        chat_messages = session['chat']
-        logging.info(f"chat_messages: {chat_messages}")
-        agent.load_memory(chat_messages)
+        # chat_messages = session['chat']
+        # logging.info(f"chat_messages: {chat_messages}")
+    agent.load_memory(session['chat'])
     logging.info(text)
     try:
         return Response(chain(agent = agent, prompt = text), mimetype='text/plain')
