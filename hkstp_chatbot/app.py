@@ -56,6 +56,7 @@ def submit():
         return Response(chain(agent = agent, prompt = text), mimetype='text/plain')
     finally:
         logging.info("Response done")
+        logging.info(f"message dicts: {agent.extract_memory()}")
         session['chat'] = agent.extract_memory()
 
 if __name__ == '__main__':
