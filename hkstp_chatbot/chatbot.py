@@ -203,7 +203,7 @@ class IncubationAgent:
             logging.info("callback handler switched")
 
         self.llm = ChatOpenAI(streaming=True, callbacks=callbacks, temperature=temperature, model=model)
-        self.load_agent()
+        self.load_memory(self.extract_memory())  # reload the agent with current memory
         
     def extract_memory(self) -> list:
         extracted_messages = self.agent.memory.chat_memory.messages
