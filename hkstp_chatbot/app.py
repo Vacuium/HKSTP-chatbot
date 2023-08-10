@@ -39,6 +39,7 @@ def submit():
             logging.info(response)
         finally:
             session['chat'] = agent.extract_memory()
+            logging.info(f"message dicts in thread: {agent.extract_memory()}")
             g.close()
 
     def chain(agent, prompt):
