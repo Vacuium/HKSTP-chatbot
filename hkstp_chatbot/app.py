@@ -58,7 +58,7 @@ def submit():
     agent.load_memory(session['chat'])
     logging.info(text)
     try:
-        return Response(chain(agent = agent, prompt = text, session = commu_dict), mimetype='text/plain')
+        return Response(chain(agent = agent, prompt = text, commu_dict = commu_dict), mimetype='text/plain')
     finally:
         logging.info("Response done")
         session['chat'] = commu_dict['chat']
