@@ -31,25 +31,26 @@ def index():
 @app.route('/submit', methods=['POST'])
 def submit():
     @copy_current_request_context
-    def agent_thread(g, agent, prompt, session):
+    def agent_thread(g, agent, prompt, commu_dict):
         try:
             # reload llm inside agent with thread generator
             agent.reload_llm(callback_generator = g)
             response = agent.ask_assistant(prompt)
             logging.info(response)
         finally:
-            session['chat'] = agent.extract_memory()
+            commu_dict['chat'] = agent.extract_memory()
             logging.info(f"message dicts in thread: {agent.extract_memory()}")
             g.close()
 
-    def chain(agent, prompt, session):
+    def chain(agent, prompt, commu_dict):
         g = ThreadedGenerator()
-        threading.Thread(target=agent_thread, args=(g, agent, prompt, session)).start()
+        threading.Thread(target=agent_thread, args=(g, agent, prompt, commu_dict)).start()
         return g
     
     data = request.get_json()
     text = data['text']
     agent = IncubationAgent()
+    commu_dict = {'chat': None}
     if 'chat' in session:
         logging.info("session chat exits")
         # chat_messages = session['chat']
@@ -57,11 +58,11 @@ def submit():
     agent.load_memory(session['chat'])
     logging.info(text)
     try:
-        return Response(chain(agent = agent, prompt = text, session = session), mimetype='text/plain')
+        return Response(chain(agent = agent, prompt = text, session = commu_dict), mimetype='text/plain')
     finally:
         logging.info("Response done")
-        logging.info(f"message dicts: {agent.extract_memory()}")
-        # session['chat'] = agent.extract_memory()
+        session['chat'] = commu_dict['chat']
+        logging.info(f"session message dicts: {session['chat']}")
 
 if __name__ == '__main__':
     app.config.from_object(Config())
