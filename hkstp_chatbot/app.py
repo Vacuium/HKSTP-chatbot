@@ -56,12 +56,15 @@ def submit():
         logging.info(f"chat_messages in session: {chat_messages}")
     agent.load_memory(session['chat'])
     logging.info(text)
-    try:
-        return Response(chain(agent = agent, prompt = text, commu_dict = commu_dict), mimetype='text/plain')
-    finally:
+
+    response = Response(chain(agent = agent, prompt = text, commu_dict = commu_dict), mimetype='text/plain')
+    @response.call_on_close
+    def _on_close():
         logging.info("Response done")
         session['chat'] = commu_dict['chat']
         logging.info(f"session message dicts: {session['chat']}")
+
+    return response
 
 if __name__ == '__main__':
     app.config.from_object(Config())
