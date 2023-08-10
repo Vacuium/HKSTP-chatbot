@@ -31,7 +31,7 @@ def index():
 @app.route('/submit', methods=['POST'])
 def submit():
     @copy_current_request_context
-    def agent_thread(g, agent, prompt):
+    def agent_thread(g, agent, prompt, session):
         try:
             # reload llm inside agent with thread generator
             agent.reload_llm(callback_generator = g)
@@ -42,9 +42,9 @@ def submit():
             logging.info(f"message dicts in thread: {agent.extract_memory()}")
             g.close()
 
-    def chain(agent, prompt):
+    def chain(agent, prompt, session):
         g = ThreadedGenerator()
-        threading.Thread(target=agent_thread, args=(g, agent, prompt)).start()
+        threading.Thread(target=agent_thread, args=(g, agent, prompt, session)).start()
         return g
     
     data = request.get_json()
@@ -57,7 +57,7 @@ def submit():
     agent.load_memory(session['chat'])
     logging.info(text)
     try:
-        return Response(chain(agent = agent, prompt = text), mimetype='text/plain')
+        return Response(chain(agent = agent, prompt = text, session = session), mimetype='text/plain')
     finally:
         logging.info("Response done")
         logging.info(f"message dicts: {agent.extract_memory()}")
