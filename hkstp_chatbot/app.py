@@ -49,7 +49,7 @@ def submit():
     data = request.get_json()
     text = data['text']
     agent = IncubationAgent()
-    commu_dict = {'chat': None}
+    commu_dict = {'chat': []}
     if 'chat' in session:
         logging.info("session chat exits")
         chat_messages = session['chat']
