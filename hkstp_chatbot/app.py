@@ -27,25 +27,24 @@ def index():
     session['chat'] = IncubationAgent().extract_memory()
     return render_template('chat.html')
 
+def agent_thread(g, agent, prompt, commu_dict):
+    try:
+        # reload llm inside agent with thread generator
+        agent.reload_llm(callback_generator = g)
+        response = agent.ask_assistant(prompt)
+        logging.info(response)
+    finally:
+        commu_dict['chat'] = agent.extract_memory()
+        logging.info(f"message dicts in thread: {agent.extract_memory()}")
+        g.close()
+
+def chain(agent, prompt, commu_dict):
+    g = ThreadedGenerator()
+    threading.Thread(target=agent_thread, args=(g, agent, prompt, commu_dict)).start()
+    return g
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    @copy_current_request_context
-    def agent_thread(g, agent, prompt, commu_dict):
-        try:
-            # reload llm inside agent with thread generator
-            agent.reload_llm(callback_generator = g)
-            response = agent.ask_assistant(prompt)
-            logging.info(response)
-        finally:
-            commu_dict['chat'] = agent.extract_memory()
-            logging.info(f"message dicts in thread: {agent.extract_memory()}")
-            g.close()
-
-    def chain(agent, prompt, commu_dict):
-        g = ThreadedGenerator()
-        threading.Thread(target=agent_thread, args=(g, agent, prompt, commu_dict)).start()
-        return g
     
     data = request.get_json()
     text = data['text']
@@ -53,8 +52,8 @@ def submit():
     commu_dict = {'chat': None}
     if 'chat' in session:
         logging.info("session chat exits")
-        # chat_messages = session['chat']
-        # logging.info(f"chat_messages: {chat_messages}")
+        chat_messages = session['chat']
+        logging.info(f"chat_messages in session: {chat_messages}")
     agent.load_memory(session['chat'])
     logging.info(text)
     try:
