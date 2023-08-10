@@ -27,22 +27,25 @@ def index():
     session['chat'] = IncubationAgent().extract_memory()
     return render_template('chat.html')
 
-def agent_thread(g, agent, prompt):
-    try:
-        # reload llm inside agent with thread generator
-        agent.reload_llm(callback_generator = g)
-        response = agent.ask_assistant(prompt)
-        logging.info(response)
-    finally:
-        g.close()
-
-def chain(agent, prompt):
-    g = ThreadedGenerator()
-    threading.Thread(target=agent_thread, args=(g, agent, prompt)).start()
-    return g
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    @copy_current_request_context
+    def agent_thread(g, agent, prompt):
+        try:
+            # reload llm inside agent with thread generator
+            agent.reload_llm(callback_generator = g)
+            response = agent.ask_assistant(prompt)
+            logging.info(response)
+        finally:
+            session['chat'] = agent.extract_memory()
+            g.close()
+
+    def chain(agent, prompt):
+        g = ThreadedGenerator()
+        threading.Thread(target=agent_thread, args=(g, agent, prompt)).start()
+        return g
+    
     data = request.get_json()
     text = data['text']
     agent = IncubationAgent()
@@ -57,7 +60,7 @@ def submit():
     finally:
         logging.info("Response done")
         logging.info(f"message dicts: {agent.extract_memory()}")
-        session['chat'] = agent.extract_memory()
+        # session['chat'] = agent.extract_memory()
 
 if __name__ == '__main__':
     app.config.from_object(Config())
