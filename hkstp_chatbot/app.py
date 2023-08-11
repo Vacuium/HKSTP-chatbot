@@ -59,6 +59,7 @@ def submit():
 
     response = Response(chain(agent = agent, prompt = text, commu_dict = commu_dict), mimetype='text/plain')
     @response.call_on_close
+    @copy_current_request_context
     def _on_close():
         logging.info("Response done")
         session['chat'] = commu_dict['chat']
